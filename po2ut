@@ -1,0 +1,9 @@
+#!/bin/bash
+name=$(basename $1 .po)
+cat $1>$name.txt
+sed -i -e :a -e '$!N;s/\n"//;ta' -e 'P;D' $name.txt
+sed -i 's/""/"/g' $name.txt
+sed -i 's/^msg\(.*\) "$/msg\1 ""/' $name.txt
+sed -i 's/msgid "\(.*\)"/\1/' $name.txt
+sed -i 's/msgstr "\(.*\)"/\1/' $name.txt
+

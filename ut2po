@@ -1,0 +1,31 @@
+#!/bin/bash
+name=$(basename $1 .txt)
+sed '/^[ \r\n\t]$/d'  $1>~temp1.txt
+sed -n 'p;n' ~temp1.txt>~id.txt
+grep . ~id.txt >~id2.txt
+sed -i 's/"/\\"/g' ~id2.txt
+sed -i -n 's/^\(.*\)[\r$]/msgid \"\1"/p' ~id2.txt
+sed -n 'n;p' ~temp1.txt>~str.txt
+grep . ~str.txt >~str2.txt
+sed -i 's/"/\\"/g' ~str2.txt
+sed -i -n 's/^\(.*\)[\r$]/msgstr \"\1"/p' ~str2.txt
+
+paste -d "\\n" ~id2.txt ~str2.txt>$1.po
+
+sed -i '1 i\
+msgid ""\
+msgstr ""\
+"Project-Id-Version: utorrent\\n"\
+"Report-Msgid-Bugs-To: \\n"\
+"POT-Creation-Date: 1970-01-01 00:00-0000\\n" \
+"PO-Revision-Date: 1970-01-01 00:00-0000\\n" \
+"Last-Translator: gymka <gymka@archlinux.lt>\\n" \
+"Language-Team: lietuvių \\n" \
+"MIME-Version: 1.0\\n" \
+"Content-Type: text/plain; charset=UTF-8\\n" \
+"Content-Transfer-Encoding: 8bit\\n" \
+"Language: lt\\n" \
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2)\\n"' $1.po
+last=$(cat ~str.txt| tail '-1'|sed 's/\(.*\)/msgstr "\1"/')
+sed -i "$ i\
+${last}" $name.po
