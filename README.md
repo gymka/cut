@@ -2,7 +2,11 @@ cut
 ===
 
 Convert Utorrent Translation
+ut2po: utorrent .txt failą paverčia .po failu
+Naudojimas: ut2po įvesties_txt_failas.txt išvesties_po_failas.po
 
-po2ut utorrent.exe.lang.lt.txt #grąžina utorrent.exe.lang.lt.txt.po, .po failą, kurį galima išverst.
+po2ut: .po failą paverčia utorrent txt failu, kurį galima importuoti atgal
+Naudojimas: po2ut ivesties_po_failas.po isvesties_txt_failas.txt
 
-ut2po utorrent.exe.lang.lt.txt.po #grąžina utorrent.exe.lang.lt.txt, atstato originalų formatą, kurį galima įkelt atgal.
+===Žinomos klaidos===
+kartais dingsta paskutinė eilutė

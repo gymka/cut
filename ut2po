@@ -1,17 +1,31 @@
 #!/bin/bash
-name=$(basename $1 .txt)
-rm ~temp1.txt ~id.txt ~id2.txt ~str.txt ~str2.txt
-sed '/^[ \r\n\t]$/d'  $1>~temp1.txt
-sed -n 'p;n' ~temp1.txt>~id.txt
+if [[ $# -eq "$NO_ARGS" ]]  
+then
+  echo "Naudojimas: `basename $0` įvesties_txt_failas.txt išvesties_po_failas.po"
+  exit $E_OPTERROR         
+fi 
+if [[ -z "$1" ]]
+then 
+	echo "Nenurodytas įvesties failas"
+	exit $E_OPTERROR 
+fi 
+if [[ -z "$2" ]]
+then 
+	echo "Nenurodytas išvesties failas"
+	exit $E_OPTERROR 
+fi 
+rm ~id.txt ~id2.txt ~str.txt ~str2.txt
+sed -i '/^[ \r\n\t]$/d'  $1
+sed -n 'p;n' $1>~id.txt
 grep . ~id.txt >~id2.txt
 sed -i 's/"/\\"/g' ~id2.txt
 sed -i -n 's/^\(.*\)[\r$]/msgid \"\1"/p' ~id2.txt
-sed -n 'n;p' ~temp1.txt>~str.txt
+sed -n 'n;p' $1>~str.txt
 grep . ~str.txt >~str2.txt
 sed -i 's/"/\\"/g' ~str2.txt
 sed -i -n 's/^\(.*\)[\r$]/msgstr \"\1"/p' ~str2.txt
 
-paste -d "\\n" ~id2.txt ~str2.txt>$1.po
+paste -d "\\n" ~id2.txt ~str2.txt>$2
 
 sed -i '1 i\
 msgid ""\
@@ -26,8 +40,8 @@ msgstr ""\
 "Content-Type: text/plain; charset=UTF-8\\n" \
 "Content-Transfer-Encoding: 8bit\\n" \
 "Language: lt\\n" \
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2)\\n"' $1.po
-last=$(cat ~str.txt| tail '-1'|sed 's/\(.*\)/msgstr "\1"/')
-sed -i "$ i\
-${last}" $name.po
-rm ~temp1.txt ~id.txt ~id2.txt ~str.txt ~str2.txt
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2)\\n"' $2
+#last=$(cat ~str.txt| tail '-1'|sed 's/\(.*\)/msgstr "\1"/')
+#sed -i "$ i\
+#${last}" $2
+rm ~id.txt ~id2.txt ~str.txt ~str2.txt

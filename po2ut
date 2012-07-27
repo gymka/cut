@@ -1,9 +1,25 @@
 #!/bin/bash
-name=$(basename $1 .po)
-cat $1>$name.txt
-sed -i -e :a -e '$!N;s/\n"//;ta' -e 'P;D' $name.txt
-sed -i 's/""/"/g' $name.txt
-sed -i 's/^msg\(.*\) "$/msg\1 ""/' $name.txt
-sed -i 's/msgid "\(.*\)"/\1/' $name.txt
-sed -i 's/msgstr "\(.*\)"/\1/' $name.txt
+
+if [[ $# -eq "$NO_ARGS" ]]  
+then
+  echo "Naudojimas: `basename $0` ivesties_po_failas.po isvesties_txt_failas.txt"
+  exit $E_OPTERROR         
+fi 
+if [[ -z "$1" ]]
+then 
+	echo "Nenurodytas įvesties failas"
+	exit $E_OPTERROR 
+fi 
+if [[ -z "$2" ]]
+then 
+	echo "Nenurodytas išvesties failas"
+	exit $E_OPTERROR 
+fi 
+cat $1>$2
+sed -i -e :a -e '$!N;s/\n"//;ta' -e 'P;D' $2
+sed -i 's/""/"/g' $2
+sed -i 's/^msg\(.*\) "$/msg\1 ""/' $2
+sed -i 's/msgid "\(.*\)"/\1/' $2
+sed -i 's/msgstr "\(.*\)"/\1/' $2
+sed -i '1,6d' $2
 
