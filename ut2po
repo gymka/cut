@@ -1,5 +1,6 @@
 #!/bin/bash
 name=$(basename $1 .txt)
+rm ~temp1.txt ~id.txt ~id2.txt ~str.txt ~str2.txt
 sed '/^[ \r\n\t]$/d'  $1>~temp1.txt
 sed -n 'p;n' ~temp1.txt>~id.txt
 grep . ~id.txt >~id2.txt
@@ -29,3 +30,4 @@ msgstr ""\
 last=$(cat ~str.txt| tail '-1'|sed 's/\(.*\)/msgstr "\1"/')
 sed -i "$ i\
 ${last}" $name.po
+rm ~temp1.txt ~id.txt ~id2.txt ~str.txt ~str2.txt
